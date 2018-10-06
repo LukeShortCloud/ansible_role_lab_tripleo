@@ -1,0 +1,30 @@
+---
+- name: Create virtual machine disks
+  command: "qemu-img create -f qcow2 /var/lib/libvirt/images/{{ item.name }}.qcow2 {{ item.size }}"
+  args:
+    creates: "/var/lib/libvirt/images/{{ item.name }}.qcow2"
+  loop: "{{ lab_tripleo_vm_disks }}"
+
+- name: Create private provisioning network
+  command: "virsh net-define {{ role_path }}/files/virt-net-openstack-private.xml"
+
+- name: Start the network
+  command: "virsh net-start openstack-private"
+
+- name: Enable autostart of the network
+  command: "virsh net-autostart openstack-private"
+
+- name: Create the Undercloud virtual machine
+  command: >
+    virt-install
+    --name {{ lab_tripleo_undercloud_name }}
+    --memory 1024
+    --vcpus 2
+    --os-variant rhel7
+    --cpu host-passthrough
+    --location http://repo.miserver.it.umich.edu/centos/7/os/x86_64
+    --disk path=/var/lib/libvirt/images/{{ lab_tripleo_undercloud_name }}.qcow2,bus=virtio,cache=none
+    --network network=default
+    --network network=openstack-private
+    --initrd-inject {{ role_path }}/files/undercloud.cfg
+    --extra-args="inst.ks=file:/ks.cfg console=tty0 console=ttyS0,115200n8"

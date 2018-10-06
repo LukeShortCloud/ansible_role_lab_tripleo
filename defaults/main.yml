@@ -1,0 +1,10 @@
+---
+lab_tripleo_libvirt_images_location: /var/lib/libvirt/images
+lab_tripleo_undercloud_name: undercloud
+lab_tripleo_vm_disks:
+  - name: "{{ lab_tripleo_undercloud_name }}"
+    size: 60
+  - name: controller0
+    size: 40
+  - name: compute0
+    size: 40
