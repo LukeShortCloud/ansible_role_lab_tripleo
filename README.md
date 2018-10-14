@@ -9,6 +9,7 @@ None.
 ## Role Variables
 
 * lab_tripleo_libvirt_images_location = The location of where the QCOW2 images will be stored.
+* lab_tripleo_openstack_release = The OpenStack release name to use. Currently this is only used for prefixing the QCOW2 image names.
 * lab_tripleo_undercloud_name = The name of the Undercloud virtual machine.
 * lib_tripleo_vm_disks = A dictionary describing the name and size (in GB) of each QCOW2 image that are created.
 

@@ -1,8 +1,8 @@
 ---
 - name: Create virtual machine disks
-  command: "qemu-img create -f qcow2 /var/lib/libvirt/images/{{ item.name }}.qcow2 {{ item.size }}G"
+  command: "qemu-img create -f qcow2 /var/lib/libvirt/images/{{ lab_tripleo_openstack_release }}_{{ item.name }}.qcow2 {{ item.size }}G"
   args:
-    creates: "/var/lib/libvirt/images/{{ item.name }}.qcow2"
+    creates: "/var/lib/libvirt/images/{{ lab_tripleo_openstack_release }}_{{ item.name }}.qcow2"
   loop: "{{ lab_tripleo_vm_disks }}"
 
 - name: Create private provisioning network
@@ -23,7 +23,7 @@
     --os-variant rhel7
     --cpu host-passthrough
     --location http://repo.miserver.it.umich.edu/centos/7/os/x86_64
-    --disk path=/var/lib/libvirt/images/{{ lab_tripleo_undercloud_name }}.qcow2,bus=virtio,cache=none
+    --disk path=/var/lib/libvirt/images/{{ lab_tripleo_openstack_release }}_{{ lab_tripleo_undercloud_name }}.qcow2,bus=virtio,cache=none
     --network network=default
     --network network=openstack-private
     --initrd-inject {{ role_path }}/files/undercloud.cfg
