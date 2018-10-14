@@ -27,4 +27,4 @@
     --network network=default
     --network network=openstack-private
     --initrd-inject {{ role_path }}/files/undercloud.cfg
-    --extra-args="inst.ks=file:/ks.cfg console=tty0 console=ttyS0,115200n8"
+    --extra-args="inst.ks=file:/undercloud.cfg console=tty0 console=ttyS0,115200n8"
