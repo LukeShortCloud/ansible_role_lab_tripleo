@@ -18,7 +18,7 @@
   command: >
     virt-install
     --name {{ lab_tripleo_undercloud_name }}
-    --memory 1024
+    --memory 8192
     --vcpus 2
     --os-variant rhel7
     --cpu host-passthrough
