@@ -13,6 +13,13 @@ None.
 * lab_tripleo_undercloud_name = The name of the Undercloud virtual machine.
 * lib_tripleo_vm_disks = A dictionary describing the name and size (in GB) of each QCOW2 image that are created.
 
+## Role Tags
+
+* lab_tripleo_images = The QCOW2 image creation task.
+* lab_tripleo_networks = Libvirt network creation tasks.
+* lab_tripleo_undercloud = Libvirt creation of the Undercloud node.
+* lab_tripleo_overcloud = Libvirt creation of Overcloud nodes.
+
 ## Dependencies
 
 None.

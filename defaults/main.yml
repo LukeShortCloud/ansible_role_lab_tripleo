@@ -1,6 +1,12 @@
 ---
 lab_tripleo_libvirt_images_location: /var/lib/libvirt/images
 lab_tripleo_undercloud_name: undercloud
+lab_tripleo_undercloud_cpus: 2
+lab_tripleo_undercloud_memory: 8192
+lab_tripleo_overcloud_cpus: 2
+lab_tripleo_overcloud_memory: 4096
+lab_tripleo_hugepages: False
+lab_tripleo_el_url: http://repo.miserver.it.umich.edu/centos/7/os/x86_64
 lab_tripleo_openstack_release: rocky
 lab_tripleo_vm_disks:
   - name: "{{ lab_tripleo_undercloud_name }}"

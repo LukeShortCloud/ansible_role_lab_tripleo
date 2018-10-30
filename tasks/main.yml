@@ -1,30 +1,59 @@
 ---
 - name: Create virtual machine disks
-  command: "qemu-img create -f qcow2 /var/lib/libvirt/images/{{ lab_tripleo_openstack_release }}_{{ item.name }}.qcow2 {{ item.size }}G"
+  command: "qemu-img create -f qcow2 {{ lab_tripleo_libvirt_images_location }}/{{ lab_tripleo_openstack_release }}_{{ item.name }}.qcow2 {{ item.size }}G"
   args:
-    creates: "/var/lib/libvirt/images/{{ lab_tripleo_openstack_release }}_{{ item.name }}.qcow2"
+    creates: "{{ lab_tripleo_libvirt_images_location }}/{{ lab_tripleo_openstack_release }}_{{ item.name }}.qcow2"
   loop: "{{ lab_tripleo_vm_disks }}"
+  tags:
+    - lab_tripleo_images
 
 - name: Create private provisioning network
   command: "virsh net-define {{ role_path }}/files/virt-net-openstack-private.xml"
+  tags:
+    - lab_tripleo_networks
 
 - name: Start the network
   command: "virsh net-start openstack-private"
+  tags:
+    - lab_tripleo_networks
 
 - name: Enable autostart of the network
   command: "virsh net-autostart openstack-private"
+  tags:
+    - lab_tripleo_networks
 
 - name: Create the Undercloud virtual machine
   command: >
     virt-install
-    --name {{ lab_tripleo_undercloud_name }}
-    --memory 8192
-    --vcpus 2
+    --name {{ lab_tripleo_openstack_release }}_{{ lab_tripleo_undercloud_name }}
+    --vcpus {{ lab_tripleo_undercloud_cpus }}
+    --memory {{ lab_tripleo_undercloud_memory }}
+    {% if lab_tripleo_hugepages == true %}--memorybacking hugepages=on{% endif %}
     --os-variant rhel7
     --cpu host-passthrough
-    --location http://repo.miserver.it.umich.edu/centos/7/os/x86_64
-    --disk path=/var/lib/libvirt/images/{{ lab_tripleo_openstack_release }}_{{ lab_tripleo_undercloud_name }}.qcow2,bus=virtio,cache=none
+    --location {{ lab_tripleo_el_url }}
+    --disk path={{ lab_tripleo_libvirt_images_location }}/{{ lab_tripleo_openstack_release }}_{{ lab_tripleo_undercloud_name }}.qcow2,bus=virtio,cache=none
     --network network=default
     --network network=openstack-private
     --initrd-inject {{ role_path }}/files/undercloud.cfg
     --extra-args="inst.ks=file:/undercloud.cfg console=tty0 console=ttyS0,115200n8"
+  tags:
+    - lab_tripleo_undercloud
+
+- name: Create the Overcloud virtual machines
+  command: >
+    virt-install
+    --name {{ lab_tripleo_openstack_release }}_{{ item.name }}
+    --vcpus {{ lab_tripleo_overcloud_cpus }}
+    --memory {{ lab_tripleo_overcloud_memory }}
+    {% if lab_tripleo_hugepages == true %}--memorybacking hugepages=on{% endif %}
+    --os-variant rhel7
+    --cpu host-passthrough
+    --import
+    --disk path={{ lab_tripleo_libvirt_images_location }}/{{ lab_tripleo_openstack_release }}_{{ item.name }}.qcow2,bus=virtio,cache=none
+    --network network=default
+    --network network=openstack-private
+    --import
+  loop: "{{ lab_tripleo_vm_disks }}"
+  tags:
+    - lab_tripleo_overcloud
