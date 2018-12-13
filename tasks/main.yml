@@ -3,7 +3,9 @@
   command: "qemu-img create -f qcow2 {{ lab_tripleo_libvirt_images_location }}/{{ lab_tripleo_openstack_release }}_{{ item.name }}.qcow2 {{ item.size }}G"
   args:
     creates: "{{ lab_tripleo_libvirt_images_location }}/{{ lab_tripleo_openstack_release }}_{{ item.name }}.qcow2"
-  loop: "{{ lab_tripleo_vm_disks }}"
+  with_items:
+    - "{{ lab_tripleo_undercloud_node }}"
+    - "{{ lab_tripleo_overcloud_nodes }}"
   tags:
     - lab_tripleo_images
 
@@ -55,6 +57,6 @@
     --network network=default
     --network network=openstack-private
     --import
-  loop: "{{ lab_tripleo_vm_disks }}"
+  loop: "{{ lab_tripleo_overcloud_nodes }}"
   tags:
     - lab_tripleo_overcloud

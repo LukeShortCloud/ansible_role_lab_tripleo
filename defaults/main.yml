@@ -9,10 +9,13 @@ lab_tripleo_hugepages: False
 lab_tripleo_console: True
 lab_tripleo_el_url: http://repo.miserver.it.umich.edu/centos/7/os/x86_64
 lab_tripleo_openstack_release: rocky
-lab_tripleo_vm_disks:
+# These two dictionaries are primarily used for creating the QCOW2 files.
+lab_tripleo_undercloud_node:
   - name: "{{ lab_tripleo_undercloud_name }}"
-    # Size is in gigabytes.
+    # Size in gigabytes.
     size: 60
+# The Overcloud names are also used to create their virtual machines.
+lab_tripleo_overcloud_nodes:
   - name: controller0
     size: 40
   - name: compute0
