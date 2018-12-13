@@ -8,17 +8,18 @@
     - lab_tripleo_images
 
 - name: Create private provisioning network
-  command: "virsh net-define {{ role_path }}/files/virt-net-openstack-private.xml"
+  virt_net:
+    name: openstack-private
+    command: define
+    xml: '{{ lookup("file", "{{ role_path }}/files/virt-net-openstack-private.xml") }}'
   tags:
     - lab_tripleo_networks
 
-- name: Start the network
-  command: "virsh net-start openstack-private"
-  tags:
-    - lab_tripleo_networks
-
-- name: Enable autostart of the network
-  command: "virsh net-autostart openstack-private"
+- name: Start and enable the network
+  virt_net:
+    name: openstack-private
+    state: active
+    autostart: True
   tags:
     - lab_tripleo_networks
 
