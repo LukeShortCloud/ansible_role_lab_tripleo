@@ -1,4 +1,5 @@
 ---
+lab_tripleo_password: tripleordo
 lab_tripleo_libvirt_images_location: /var/lib/libvirt/images
 lab_tripleo_undercloud_name: undercloud
 lab_tripleo_undercloud_cpus: 2

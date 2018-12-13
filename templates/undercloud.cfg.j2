@@ -1,7 +1,7 @@
 # Operating system install
 install
 eula --agreed
-url --url http://repo.miserver.it.umich.edu/centos/7/os/x86_64
+url --url "{{ lab_tripleo_el_url }}"
 text
 
 # Language
@@ -22,7 +22,7 @@ part / --asprimary --fstype xfs --grow
 
 # Security
 auth --enableshadow --passalgo=sha512
-rootpw em86N8vWeebp8ayX
+rootpw {{ lab_tripleo_password }}
 
 # Network
 network --device eth0 --onboot yes --bootproto dhcp

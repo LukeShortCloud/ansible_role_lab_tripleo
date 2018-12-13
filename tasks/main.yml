@@ -25,6 +25,12 @@
   tags:
     - lab_tripleo_networks
 
+- name: Create the Undercloud kickstart file
+  template:
+    src: undercloud.cfg.j2
+    dest: /tmp/undercloud.cfg
+    force: True
+
 - name: Create the Undercloud virtual machine
   command: >
     virt-install
@@ -38,7 +44,7 @@
     --disk path={{ lab_tripleo_libvirt_images_location }}/{{ lab_tripleo_openstack_release }}_{{ lab_tripleo_undercloud_name }}.qcow2,bus=virtio,cache=none
     --network network=default
     --network network=openstack-private
-    --initrd-inject {{ role_path }}/files/undercloud.cfg
+    --initrd-inject /tmp/undercloud.cfg
     --extra-args="inst.ks=file:/undercloud.cfg{% if lab_tripleo_console %} console=tty0 console=ttyS0,115200n8{% endif %}"
   tags:
     - lab_tripleo_undercloud
