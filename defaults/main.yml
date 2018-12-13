@@ -19,5 +19,7 @@ lab_tripleo_undercloud_node:
 lab_tripleo_overcloud_nodes:
   - name: controller0
     size: 40
+    mac: 52:54:00:bf:fc:dc
   - name: compute0
     size: 40
+    mac: 52:54:00:9f:ce:63

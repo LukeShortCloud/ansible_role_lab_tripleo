@@ -28,7 +28,7 @@
 - name: Create the Undercloud kickstart file
   template:
     src: undercloud.cfg.j2
-    dest: /tmp/undercloud.cfg
+    dest: /tmp/lab_tripleo_undercloud.cfg
     force: True
 
 - name: Create the Undercloud virtual machine
@@ -44,7 +44,7 @@
     --disk path={{ lab_tripleo_libvirt_images_location }}/{{ lab_tripleo_openstack_release }}_{{ lab_tripleo_undercloud_name }}.qcow2,bus=virtio,cache=none
     --network network=default
     --network network=openstack-private
-    --initrd-inject /tmp/undercloud.cfg
+    --initrd-inject /tmp/lab_tripleo_undercloud.cfg
     --extra-args="inst.ks=file:/undercloud.cfg{% if lab_tripleo_console %} console=tty0 console=ttyS0,115200n8{% endif %}"
   tags:
     - lab_tripleo_undercloud
@@ -61,8 +61,16 @@
     --import
     --disk path={{ lab_tripleo_libvirt_images_location }}/{{ lab_tripleo_openstack_release }}_{{ item.name }}.qcow2,bus=virtio,cache=none
     --network network=default
-    --network network=openstack-private
+    --network network=openstack-private,mac={{ item.mac }}
     --import
   loop: "{{ lab_tripleo_overcloud_nodes }}"
   tags:
     - lab_tripleo_overcloud
+
+- name: Saving Ironic node configuration to /tmp/lab_tripleo_instackenv.json
+  template:
+    src: instackenv.json.j2
+    dest: /tmp/lab_tripleo_instackenv.json
+    force: True
+  tags:
+    - instackenv

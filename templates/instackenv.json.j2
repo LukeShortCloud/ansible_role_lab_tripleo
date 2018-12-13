@@ -1,0 +1,17 @@
+{
+    "nodes": [
+{% for item in lab_tripleo_overcloud_nodes %}
+        {
+            "name": "{{ item.name }}",
+            "pm_type": "fake_pxe",
+            "mac": [
+                "{{ item.mac }}"
+            ],
+            "arch": "x86_64",
+            "cpu": {{ lab_tripleo_overcloud_cpus }}",
+            "memory": "{{ lab_tripleo_overcloud_memory }}",
+            "disk": "{{ item.size }}"
+        }{% if not loop.last %},{% endif %}
+{% endfor %}]
+}
+
