@@ -20,6 +20,8 @@ lab_tripleo_overcloud_nodes:
   - name: controller0
     size: 40
     mac: 52:54:00:bf:fc:dc
+    capabilities: "profile:control,boot_option:local"
   - name: compute0
     size: 40
     mac: 52:54:00:9f:ce:63
+    capabilities: "profile:compute,boot_option:local"

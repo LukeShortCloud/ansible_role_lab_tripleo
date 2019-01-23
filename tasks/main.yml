@@ -33,6 +33,8 @@
     src: undercloud.cfg.j2
     dest: /tmp/lab_tripleo_undercloud.cfg
     force: True
+  tags:
+    - template
 
 - name: Create the Undercloud virtual machine
   command: >
@@ -77,3 +79,4 @@
     force: True
   tags:
     - instackenv
+    - template
