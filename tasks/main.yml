@@ -1,6 +1,9 @@
 ---
 - name: Create virtual machine disks
-  command: "qemu-img create -f qcow2 {{ lab_tripleo_libvirt_images_location }}/{{ lab_tripleo_openstack_release }}_{{ item.name }}.qcow2 {{ item.size }}G"
+  # This creates a disk size that is 1GB more than expected for the Overcloud nodes.
+  # The storage should be slightly greater than the disk size specified in the flavor
+  # to avoid partitioning issues.
+  command: "qemu-img create -f qcow2 {{ lab_tripleo_libvirt_images_location }}/{{ lab_tripleo_openstack_release }}_{{ item.name }}.qcow2 {{ item.size + 1 }}G"
   args:
     creates: "{{ lab_tripleo_libvirt_images_location }}/{{ lab_tripleo_openstack_release }}_{{ item.name }}.qcow2"
   with_items:
