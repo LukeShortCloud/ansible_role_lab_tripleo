@@ -72,11 +72,14 @@
   tags:
     - lab_tripleo_overcloud
 
-- name: Saving Ironic node configuration to /tmp/lab_tripleo_instackenv.json
+- name: Saving Ironic node configuration to /tmp/lab_tripleo_instackenv.*
   template:
-    src: instackenv.json.j2
-    dest: /tmp/lab_tripleo_instackenv.json
+    src: "instackenv.{{ item }}.j2"
+    dest: "/tmp/lab_tripleo_instackenv.{{ item }}"
     force: True
+  loop:
+    - json
+    - yaml
   tags:
     - instackenv
     - template
