@@ -8,6 +8,10 @@ None.
 
 ## Role Variables
 
+* lab_tripleo_cpu_passthrough (boolean) = If CPU host-passthrough should be enabled for nested virtualization.
+* lab_tripleo_no_log (boolean) = If sensitive tasks, such as any that use a password, should display output.
+* lab_tripleo_preprovisioned (boolean) = If the deployment should use pre-provisioned/deployed nodes instead of having TripleO deploy the Overcloud nodes using Ironic.
+* lab_tripleo_preprovisioned_image (string) = The master operating system image to use for all of the TripleO nodes.
 * lab_tripleo_libvirt_images_location = The location of where the QCOW2 images will be stored.
 * lab_tripleo_openstack_release = The OpenStack release name to use. Currently this is only used for prefixing the QCOW2 image names.
 * lab_tripleo_undercloud_name = The name of the Undercloud virtual machine.
@@ -26,11 +30,26 @@ None.
 
 ## Example Playbook
 
+* Create a lab from scratch. Use Kickstart to install Enterprise Linux (EL) on the Undercloud only.
+
 ```
 ---
 - hosts: hypervisor
   roles:
     - ansible_role_lab_tripleo
+```
+
+* Define virtual machines in Libvirt based on existing EL virtual machine images.
+
+```
+---
+- hosts: hypervisor
+  roles:
+    - name: ansible_role_lab_tripleo
+      vars:
+        lab_tripleo_preprovisioned: True
+        lab_tripleo_preprovisioned_image: rhel-server-7.6-x86_64-kvm.qcow2
+        lab_tripleo_openstack_release: rhosp13
 ```
 
 ## License

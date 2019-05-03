@@ -1,4 +1,8 @@
 ---
+lab_tripleo_cpu_passthrough: True
+lab_tripleo_no_log: True
+lab_tripleo_preprovisioned: False
+lab_tripleo_preprovisioned_image: CentOS-7-x86_64-GenericCloud.qcow2
 lab_tripleo_password: tripleordo
 lab_tripleo_libvirt_images_location: /var/lib/libvirt/images
 lab_tripleo_undercloud_name: undercloud

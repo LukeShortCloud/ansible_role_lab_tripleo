@@ -9,8 +9,32 @@
   with_items:
     - "{{ lab_tripleo_undercloud_node }}"
     - "{{ lab_tripleo_overcloud_nodes }}"
+  when: not lab_tripleo_preprovisioned
   tags:
     - lab_tripleo_images
+
+- name: Configure the pre-provisioned nodes password
+  command: >
+    virt-customize
+    -a {{ lab_tripleo_libvirt_images_location }}/{{ lab_tripleo_preprovisioned_image }}
+    --root-password password:{{ lab_tripleo_password }}
+    --uninstall cloud-init
+  no_log: "{{ lab_tripleo_no_log }}"
+  when: lab_tripleo_preprovisioned
+
+- name: Configure the pre-provisioned to have their machine-id reset
+  command: virt-sysprep --operations machine-id -a {{ lab_tripleo_libvirt_images_location }}/{{ lab_tripleo_preprovisioned_image }}
+  when: lab_tripleo_preprovisioned
+
+- name: Copying pre-provisioned images
+  copy:
+    src: "{{ lab_tripleo_libvirt_images_location }}/{{ lab_tripleo_preprovisioned_image }}"
+    dest: "{{ lab_tripleo_libvirt_images_location }}/{{ lab_tripleo_openstack_release }}_{{ item.name }}.qcow2"
+    remote_src: True
+  with_items:
+    - "{{ lab_tripleo_undercloud_node }}"
+    - "{{ lab_tripleo_overcloud_nodes }}"
+  when: lab_tripleo_preprovisioned
 
 - name: Create private provisioning network
   virt_net:
@@ -33,6 +57,7 @@
     src: undercloud.cfg.j2
     dest: /tmp/lab_tripleo_undercloud.cfg
     force: True
+  when: not lab_tripleo_preprovisioned
   tags:
     - template
 
@@ -42,15 +67,17 @@
     --name {{ lab_tripleo_openstack_release }}_{{ lab_tripleo_undercloud_name }}
     --vcpus {{ lab_tripleo_undercloud_cpus }}
     --memory {{ lab_tripleo_undercloud_memory }}
-    {% if lab_tripleo_hugepages == true %}--memorybacking hugepages=on{% endif %}
+    {% if lab_tripleo_hugepages %}--memorybacking hugepages=on{% endif %}
     --os-variant rhel7
-    --cpu host-passthrough
-    --location {{ lab_tripleo_el_url }}
+    {% if lab_tripleo_cpu_passthrough %}--cpu host-passthrough{% endif %}
     --disk path={{ lab_tripleo_libvirt_images_location }}/{{ lab_tripleo_openstack_release }}_{{ lab_tripleo_undercloud_name }}.qcow2,bus=virtio,cache=none
     --network network=default
     --network network=openstack-private
-    --initrd-inject /tmp/lab_tripleo_undercloud.cfg
-    --extra-args="inst.ks=file:/lab_tripleo_undercloud.cfg{% if lab_tripleo_console %} console=tty0 console=ttyS0,115200n8{% endif %}"
+    {% if not lab_tripleo_preprovisioned %}
+    --location {{ lab_tripleo_el_url }}
+    --initrd-inject /tmp/lab_tripleo_undercloud.cfg --extra-args="inst.ks=file:/lab_tripleo_undercloud.cfg{% if lab_tripleo_console %} console=tty0 console=ttyS0,115200n8{% endif %}"
+    {% endif %}
+    {% if lab_tripleo_preprovisioned %}--import{% endif %}
   tags:
     - lab_tripleo_undercloud
 
@@ -62,7 +89,7 @@
     --memory {{ lab_tripleo_overcloud_memory }}
     {% if lab_tripleo_hugepages == true %}--memorybacking hugepages=on{% endif %}
     --os-variant rhel7
-    --cpu host-passthrough
+    {% if lab_tripleo_cpu_passthrough %}--cpu host-passthrough{% endif %}
     --import
     --disk path={{ lab_tripleo_libvirt_images_location }}/{{ lab_tripleo_openstack_release }}_{{ item.name }}.qcow2,bus=virtio,cache=none
     --network network=default
