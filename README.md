@@ -10,12 +10,20 @@ None.
 
 * lab_tripleo_cpu_passthrough (boolean) = If CPU host-passthrough should be enabled for nested virtualization.
 * lab_tripleo_no_log (boolean) = If sensitive tasks, such as any that use a password, should display output.
+* lab_tripleo_console (boolean) = If a CLI console should be setup instead of a GUI one.
+* lab_tripleo_{undercloud,overcloud}_{cpus,memory} (integer) = The number of processor or RAM allocation to each type of node.
 * lab_tripleo_preprovisioned (boolean) = If the deployment should use pre-provisioned/deployed nodes instead of having TripleO deploy the Overcloud nodes using Ironic.
 * lab_tripleo_preprovisioned_image (string) = The master operating system image to use for all of the TripleO nodes.
-* lab_tripleo_libvirt_images_location = The location of where the QCOW2 images will be stored.
-* lab_tripleo_openstack_release = The OpenStack release name to use. Currently this is only used for prefixing the QCOW2 image names.
-* lab_tripleo_undercloud_name = The name of the Undercloud virtual machine.
-* lib_tripleo_vm_disks = A dictionary describing the name and size (in GB) of each QCOW2 image that are created.
+* lab_tripleo_libvirt_images_location (string) = The location of where the QCOW2 images will be stored.
+* lab_tripleo_openstack_release (string) = The OpenStack release name to use. Currently this is only used for prefixing the QCOW2 image names.
+* lab_tripleo_undercloud_name (string) = The name of the Undercloud virtual machine.
+* lab_tripleo_undercloud_node (dictionary) = A dictionary describing the name and size of the QCOW2 image that is created.
+    * name (string) = The name of the Undercloud virtual machine.
+    * size (integer) = The size, in GB, of the QCOW2 image.
+* lab_tripleo_overcloud_nodes (dictionary) = A dictionary describing the name, MAC address of the network interface card to PXE boot on, and the size of each QCOW2 image that is created.
+    * mac (string) = The MAC address to use for the PXE boot interface.
+    * name (string) = The name of the virtual machine. It is recommended to name it after it's TripleO Role (Controller, Compute, etc.).
+    * size (integer) = The size, in GB, of the QCOW2 image.
 
 ## Role Tags
 
