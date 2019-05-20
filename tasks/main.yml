@@ -64,11 +64,11 @@
 - name: Create the Undercloud virtual machine
   command: >
     virt-install
-    --name {{ lab_tripleo_openstack_release }}_{{ lab_tripleo_undercloud_name }}
+    --name {{ lab_tripleo_undercloud_name }}.{{ lab_tripleo_openstack_release }}
     --vcpus {{ lab_tripleo_undercloud_cpus }}
     --memory {{ lab_tripleo_undercloud_memory }}
     {% if lab_tripleo_hugepages %}--memorybacking hugepages=on{% endif %}
-    --os-variant rhel7
+    --os-variant rhel7.0
     {% if lab_tripleo_cpu_passthrough %}--cpu host-passthrough{% endif %}
     --disk path={{ lab_tripleo_libvirt_images_location }}/{{ lab_tripleo_openstack_release }}_{{ lab_tripleo_undercloud_name }}.qcow2,bus=virtio,cache=none
     --network network=default
@@ -84,11 +84,11 @@
 - name: Create the Overcloud virtual machines
   command: >
     virt-install
-    --name {{ lab_tripleo_openstack_release }}_{{ item.name }}
+    --name {{ item.name }}.{{ lab_tripleo_openstack_release }}
     --vcpus {{ lab_tripleo_overcloud_cpus }}
     --memory {{ lab_tripleo_overcloud_memory }}
     {% if lab_tripleo_hugepages == true %}--memorybacking hugepages=on{% endif %}
-    --os-variant rhel7
+    --os-variant rhel7.0
     {% if lab_tripleo_cpu_passthrough %}--cpu host-passthrough{% endif %}
     --import
     --disk path={{ lab_tripleo_libvirt_images_location }}/{{ lab_tripleo_openstack_release }}_{{ item.name }}.qcow2,bus=virtio,cache=none
