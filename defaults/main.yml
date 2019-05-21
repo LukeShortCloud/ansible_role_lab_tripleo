@@ -1,4 +1,5 @@
 ---
+lab_tripleo_copy_method: qemu-img
 lab_tripleo_cpu_passthrough: True
 lab_tripleo_no_log: True
 lab_tripleo_preprovisioned: False

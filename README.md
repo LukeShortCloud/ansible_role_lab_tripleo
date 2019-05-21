@@ -8,6 +8,7 @@ None.
 
 ## Role Variables
 
+* lab_tripleo_copy_method (string) = The method to copy pre-provisioned node images. "ansible", "qemu-img", or "reflink" Default: qemu-img.
 * lab_tripleo_cpu_passthrough (boolean) = If CPU host-passthrough should be enabled for nested virtualization.
 * lab_tripleo_no_log (boolean) = If sensitive tasks, such as any that use a password, should display output.
 * lab_tripleo_console (boolean) = If a CLI console should be setup instead of a GUI one.

@@ -26,7 +26,7 @@
   command: virt-sysprep --operations machine-id -a {{ lab_tripleo_libvirt_images_location }}/{{ lab_tripleo_preprovisioned_image }}
   when: lab_tripleo_preprovisioned
 
-- name: Copying pre-provisioned images
+- name: Copying pre-provisioned images (via Ansible)
   copy:
     src: "{{ lab_tripleo_libvirt_images_location }}/{{ lab_tripleo_preprovisioned_image }}"
     dest: "{{ lab_tripleo_libvirt_images_location }}/{{ lab_tripleo_openstack_release }}_{{ item.name }}.qcow2"
@@ -34,7 +34,30 @@
   with_items:
     - "{{ lab_tripleo_undercloud_node }}"
     - "{{ lab_tripleo_overcloud_nodes }}"
-  when: lab_tripleo_preprovisioned
+  when: lab_tripleo_preprovisioned and
+        (lab_tripleo_copy_method == "ansible")
+
+- name: Copying pre-provisioned images (via qemu-img)
+  command: >
+    qemu-img create -f qcow2 -b
+    {{ lab_tripleo_libvirt_images_location }}/{{ lab_tripleo_preprovisioned_image }}
+    {{ lab_tripleo_libvirt_images_location }}/{{ lab_tripleo_openstack_release }}_{{ item.name }}.qcow2
+  with_items:
+    - "{{ lab_tripleo_undercloud_node }}"
+    - "{{ lab_tripleo_overcloud_nodes }}"
+  when: lab_tripleo_preprovisioned and
+        (lab_tripleo_copy_method == "qemu-img")
+
+- name: Copying pre-provisioned images (via cp --relink)
+  command: >
+    cp --reflink
+    {{ lab_tripleo_libvirt_images_location }}/{{ lab_tripleo_preprovisioned_image }}
+    {{ lab_tripleo_libvirt_images_location }}/{{ lab_tripleo_openstack_release }}_{{ item.name }}.qcow2
+  with_items:
+    - "{{ lab_tripleo_undercloud_node }}"
+    - "{{ lab_tripleo_overcloud_nodes }}"
+  when: lab_tripleo_preprovisioned and
+        (lab_tripleo_copy_method == "reflink")
 
 - name: Create private provisioning network
   virt_net:
