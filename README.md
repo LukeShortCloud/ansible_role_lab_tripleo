@@ -32,6 +32,7 @@ None.
 * lab_tripleo_networks = Libvirt network creation tasks.
 * lab_tripleo_undercloud = Libvirt creation of the Undercloud node.
 * lab_tripleo_overcloud = Libvirt creation of Overcloud nodes.
+* lab_tripleo_resize = Resize tasks for the pre-provisioned nodes master image.
 
 ## Dependencies
 

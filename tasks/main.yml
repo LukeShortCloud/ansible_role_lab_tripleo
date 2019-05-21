@@ -26,6 +26,38 @@
   command: virt-sysprep --operations machine-id -a {{ lab_tripleo_libvirt_images_location }}/{{ lab_tripleo_preprovisioned_image }}
   when: lab_tripleo_preprovisioned
 
+- name: Create a new image for resizing
+  command: qemu-img create -f qcow2 {{ lab_tripleo_libvirt_images_location }}/{{ lab_tripleo_preprovisioned_image }}RESIZED 60G
+  when: lab_tripleo_preprovisioned
+  tags:
+    - lab_tripleo_resize
+
+- name: Resize the pre-provisioned image
+  command: >
+    virt-resize --expand /dev/sda1
+    {{ lab_tripleo_libvirt_images_location }}/{{ lab_tripleo_preprovisioned_image }}
+    {{ lab_tripleo_libvirt_images_location }}/{{ lab_tripleo_preprovisioned_image }}RESIZED
+  when: lab_tripleo_preprovisioned
+  tags:
+    - lab_tripleo_resize
+
+- name: Delete the original image
+  file:
+    path: "{{ lab_tripleo_libvirt_images_location }}/{{ lab_tripleo_preprovisioned_image }}"
+    state: absent
+  when: lab_tripleo_preprovisioned
+  tags:
+    - lab_tripleo_resize
+
+- name: Rename the resized image
+  command: >
+    mv
+    "{{ lab_tripleo_libvirt_images_location }}/{{ lab_tripleo_preprovisioned_image }}RESIZED"
+    "{{ lab_tripleo_libvirt_images_location }}/{{ lab_tripleo_preprovisioned_image }}"
+  when: lab_tripleo_preprovisioned
+  tags:
+    - lab_tripleo_resize
+
 - name: Copying pre-provisioned images (via Ansible)
   copy:
     src: "{{ lab_tripleo_libvirt_images_location }}/{{ lab_tripleo_preprovisioned_image }}"
