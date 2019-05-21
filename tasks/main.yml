@@ -154,14 +154,27 @@
   tags:
     - lab_tripleo_overcloud
 
-- name: Saving Ironic node configuration to /tmp/lab_tripleo_instackenv.*
+- name: Create the /tmp/lab_tripleo/ directory
+  file:
+    path: /tmp/lab_tripleo
+    state: directory
+  tags:
+    - template
+
+- name: Save Ironic node configuration to /tmp/lab_tripleo/
   template:
     src: "instackenv.{{ item }}.j2"
-    dest: "/tmp/lab_tripleo_instackenv.{{ item }}"
+    dest: "/tmp/lab_tripleo/instackenv.{{ item }}"
     force: True
   loop:
     - json
     - yaml
   tags:
-    - instackenv
+    - template
+
+- name: Save Ansible inventory to /tmp/lab_tripleo/
+  template:
+    src: inventory.ini.j2
+    dest: /tmp/lab_tripleo/inventory.ini
+  tags:
     - template

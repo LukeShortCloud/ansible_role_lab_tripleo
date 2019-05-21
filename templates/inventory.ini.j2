@@ -1,0 +1,16 @@
+{% for item in lab_tripleo_undercloud_node %}
+{{ item.name }} ansible_user=root ansible_password={{ lab_tripleo_password }}
+{% endfor %}
+{% for item in lab_tripleo_overcloud_nodes %}
+{{ item.name }} ansible_user=root ansible_password={{ lab_tripleo_password }}
+{% endfor %}
+
+[undercloud]
+{% for item in lab_tripleo_undercloud_node %}
+{{ item.name }}
+{% endfor %}
+
+[overcloud]
+{% for item in lab_tripleo_overcloud_nodes %}
+{{ item.name }}
+{% endfor %}
