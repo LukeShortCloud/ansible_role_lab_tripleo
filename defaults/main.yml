@@ -8,9 +8,7 @@ lab_tripleo_password: tripleordo
 lab_tripleo_libvirt_images_location: /var/lib/libvirt/images
 lab_tripleo_undercloud_name: undercloud
 lab_tripleo_undercloud_cpus: 2
-lab_tripleo_undercloud_memory: 8192
 lab_tripleo_overcloud_cpus: 2
-lab_tripleo_overcloud_memory: 4096
 lab_tripleo_hugepages: False
 lab_tripleo_console: True
 lab_tripleo_el_url: http://repo.miserver.it.umich.edu/centos/7/os/x86_64
@@ -20,13 +18,17 @@ lab_tripleo_undercloud_node:
   - name: "{{ lab_tripleo_undercloud_name }}"
     # Size in gigabytes.
     size: 60
+    # Size in megabytes.
+    ram: 12288
 # The Overcloud names are also used to create their virtual machines.
 lab_tripleo_overcloud_nodes:
   - name: controller0
     size: 40
+    ram: 8192
     mac: 52:54:00:bf:fc:dc
     capabilities: "profile:control,boot_option:local"
   - name: compute0
     size: 40
+    ram: 4096
     mac: 52:54:00:9f:ce:63
     capabilities: "profile:compute,boot_option:local"

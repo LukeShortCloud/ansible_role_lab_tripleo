@@ -121,7 +121,7 @@
     virt-install
     --name {{ lab_tripleo_undercloud_name }}.{{ lab_tripleo_openstack_release }}
     --vcpus {{ lab_tripleo_undercloud_cpus }}
-    --memory {{ lab_tripleo_undercloud_memory }}
+    --memory {{ item.ram }}
     {% if lab_tripleo_hugepages %}--memorybacking hugepages=on{% endif %}
     --os-variant rhel7.0
     {% if lab_tripleo_cpu_passthrough %}--cpu host-passthrough{% endif %}
@@ -141,7 +141,7 @@
     virt-install
     --name {{ item.name }}.{{ lab_tripleo_openstack_release }}
     --vcpus {{ lab_tripleo_overcloud_cpus }}
-    --memory {{ lab_tripleo_overcloud_memory }}
+    --memory {{ item.ram }}
     {% if lab_tripleo_hugepages == true %}--memorybacking hugepages=on{% endif %}
     --os-variant rhel7.0
     {% if lab_tripleo_cpu_passthrough %}--cpu host-passthrough{% endif %}
