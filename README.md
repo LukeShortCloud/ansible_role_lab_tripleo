@@ -4,10 +4,11 @@ An Ansible role to help setup the virtual infrastructure for a small TripleO lab
 
 ## Requirements
 
-None.
+* 24GB RAM (recommended)
 
 ## Role Variables
 
+* lab_tripleo_password (string) = The root password to set for the virtual machines. This only applies to the Undercloud and pre-provisioned Overcloud nodes.
 * lab_tripleo_copy_method (string) = The method to copy pre-provisioned node images. "ansible", "qemu-img", or "reflink" Default: qemu-img.
 * lab_tripleo_cpu_passthrough (boolean) = If CPU host-passthrough should be enabled for nested virtualization.
 * lab_tripleo_no_log (boolean) = If sensitive tasks, such as any that use a password, should display output.
