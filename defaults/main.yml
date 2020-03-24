@@ -29,6 +29,6 @@ lab_tripleo_overcloud_nodes:
     capabilities: "profile:control,boot_option:local"
   - name: compute0
     size: 40
-    ram: 4096
+    ram: 2048
     mac: 52:54:00:9f:ce:63
     capabilities: "profile:compute,boot_option:local"
