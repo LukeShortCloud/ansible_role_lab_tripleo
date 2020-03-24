@@ -7,7 +7,7 @@ nodes:
       - "{{ item.mac }}"
     arch: "x86_64"
     cpu: "{{ lab_tripleo_overcloud_cpus }}"
-    memory: "{{ lab_tripleo_overcloud_memory }}"
+    memory: "{{ item.ram }}"
     disk: "{{ item.size }}"
     capabilities: "{{ item.capabilities }}"
 {% endfor %}
