@@ -20,10 +20,14 @@
     --root-password password:{{ lab_tripleo_password }}
     --uninstall cloud-init
   no_log: "{{ lab_tripleo_no_log }}"
+  tags:
+    - image_prep
   when: lab_tripleo_preprovisioned
 
 - name: Configure the pre-provisioned to have their machine-id reset
   command: virt-sysprep --operations machine-id -a {{ lab_tripleo_libvirt_images_location }}/{{ lab_tripleo_preprovisioned_image }}
+  tags:
+    - image_prep
   when: lab_tripleo_preprovisioned
 
 - name: Create a new image for resizing
