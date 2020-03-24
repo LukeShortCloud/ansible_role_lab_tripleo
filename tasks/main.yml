@@ -133,6 +133,7 @@
     --initrd-inject /tmp/lab_tripleo_undercloud.cfg --extra-args="inst.ks=file:/lab_tripleo_undercloud.cfg{% if lab_tripleo_console %} console=tty0 console=ttyS0,115200n8{% endif %}"
     {% endif %}
     {% if lab_tripleo_preprovisioned %}--import{% endif %}
+  loop: "{{ lab_tripleo_undercloud_node }}"
   tags:
     - lab_tripleo_undercloud
 
